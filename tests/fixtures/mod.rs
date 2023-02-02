@@ -1,6 +1,6 @@
 use difference;
-use markdown;
-use std::fs::File;
+use markdown::{self, to_html};
+use std::fs::{self, File};
 use std::io::Read;
 use std::path::Path;
 
@@ -18,7 +18,7 @@ fn compare(name: &str) {
     File::open(md).unwrap().read_to_string(&mut tokens).unwrap();
     println!("{:?} -> {:?}", tokens, markdown::tokenize(&tokens));
 
-    difference::assert_diff(&comp, &markdown::file_to_html(md).unwrap(), " ", 0);
+    difference::assert_diff!(&comp, &markdown::file_to_html(md).unwrap(), " ", 0);
 }
 
 fn roundtrip(name: &str) {
@@ -40,7 +40,7 @@ fn roundtrip(name: &str) {
 
     println!("BEGIN\n{}\nEND", out);
 
-    difference::assert_diff(&comp, &markdown::to_html(&out), " ", 0);
+    difference::assert_diff!(&comp, &markdown::to_html(&out), " ", 0);
 }
 
 #[test]
@@ -311,4 +311,27 @@ pub fn wrapping() {
 #[test]
 pub fn rt_wrapping() {
     roundtrip("wrapping")
+}
+
+#[test]
+pub fn horizontal_line() {
+    compare("horizontal_line")
+}
+
+#[test]
+pub fn rt_horizontal_line() {
+    roundtrip("horizontal_line")
+}
+
+#[test]
+pub fn alternate_horizontal_line() {
+    let md_string = fs::read_to_string("tests/fixtures/files/horizontal_line.text")
+        .expect("This file is there!");
+
+    let html_string = fs::read_to_string("tests/fixtures/files/horizontal_line.html")
+        .expect("This file is there!");
+
+    let parsed = to_html(&md_string);
+
+    difference::assert_diff!(&html_string, &parsed, " ", 0);
 }

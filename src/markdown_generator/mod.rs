@@ -40,6 +40,8 @@ fn gen_block(b: Block) -> String {
         LinkReference(id, url, Some(title)) => format!("[{}]: {} \"{}\"", id, url, title),
         Raw(x) => x,
         Hr => "===".to_owned(),
+        Comment(x) => x,
+        Html(x) => x,
     }
 }
 

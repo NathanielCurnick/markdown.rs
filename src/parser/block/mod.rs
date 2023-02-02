@@ -6,7 +6,9 @@ use parser::Span::{Break, Text};
 mod atx_header;
 mod blockquote;
 mod code_block;
+mod comments;
 mod hr;
+mod html;
 mod link_reference;
 mod ordered_list;
 mod setext_header;
@@ -14,7 +16,9 @@ mod unordered_list;
 use self::atx_header::parse_atx_header;
 use self::blockquote::parse_blockquote;
 use self::code_block::parse_code_block;
+use self::comments::parse_comments;
 use self::hr::parse_hr;
+use self::html::parse_html;
 use self::link_reference::parse_link_reference;
 use self::ordered_list::parse_ordered_list;
 use self::setext_header::parse_setext_header;
@@ -71,6 +75,8 @@ pub fn parse_blocks(md: &str) -> Vec<Block> {
 fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
     pipe_opt!(
     lines
+    => parse_comments
+    => parse_html
     => parse_hr
     => parse_atx_header
     => parse_code_block
@@ -113,6 +119,14 @@ mod test {
     fn finds_hr() {
         assert_eq!(parse_blocks("-------"), vec![Hr]);
         assert_eq!(parse_blocks("======="), vec![Hr]);
+    }
+
+    #[test]
+    fn finds_hr_in_situ() {
+        assert_eq!(
+            parse_blocks("Text\n\n======="),
+            vec![Paragraph(vec![Text("Text".to_owned())]), Hr]
+        );
     }
 
     #[test]

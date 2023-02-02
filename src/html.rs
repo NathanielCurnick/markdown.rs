@@ -1,6 +1,7 @@
 use parser::Block;
 use parser::Block::{
-    Blockquote, CodeBlock, Header, Hr, LinkReference, OrderedList, Paragraph, Raw, UnorderedList,
+    Blockquote, CodeBlock, Comment, Header, Hr, Html, LinkReference, OrderedList, Paragraph, Raw,
+    UnorderedList,
 };
 use parser::Span::{Break, Code, Emphasis, Image, Link, Literal, RefLink, Strong, Text};
 use parser::{ListItem, OrderedListType, Span};
@@ -60,6 +61,8 @@ pub fn to_html(blocks: &[Block]) -> String {
             LinkReference(_, _, _) => "".to_owned(),
             Raw(ref elements) => elements.to_owned(),
             Hr => format!("<hr />\n\n"),
+            Comment(ref comments) => comments.to_owned(),
+            Html(ref html) => html.to_owned(),
         };
         ret.push_str(&next)
     }

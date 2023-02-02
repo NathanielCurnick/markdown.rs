@@ -46,6 +46,8 @@ pub enum Block {
     UnorderedList(Vec<ListItem>),
     Raw(String),
     Hr,
+    Comment(String),
+    Html(String),
 }
 
 #[allow(missing_docs)]
