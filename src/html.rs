@@ -61,8 +61,8 @@ pub fn to_html(blocks: &[Block]) -> String {
             LinkReference(_, _, _) => "".to_owned(),
             Raw(ref elements) => elements.to_owned(),
             Hr => format!("<hr />\n\n"),
-            Comment(ref comments) => comments.to_owned(),
-            Html(ref html) => html.to_owned(),
+            Comment(ref comments) => format!("{}\n", comments),
+            Html(ref html) => format!("{}\n", html),
         };
         ret.push_str(&next)
     }

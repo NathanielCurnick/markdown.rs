@@ -75,8 +75,9 @@ pub fn parse_blocks(md: &str) -> Vec<Block> {
 fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
     pipe_opt!(
     lines
-    => parse_comments
     => parse_html
+    // MUST do html before comments - could make html regex more robust?
+    => parse_comments
     => parse_hr
     => parse_atx_header
     => parse_code_block

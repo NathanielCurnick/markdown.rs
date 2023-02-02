@@ -324,6 +324,11 @@ pub fn rt_horizontal_line() {
 }
 
 #[test]
+pub fn html() {
+    compare("html");
+}
+
+#[test]
 pub fn alternate_horizontal_line() {
     let md_string = fs::read_to_string("tests/fixtures/files/horizontal_line.text")
         .expect("This file is there!");
